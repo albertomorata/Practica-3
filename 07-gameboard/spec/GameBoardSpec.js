@@ -64,25 +64,89 @@ describe("Clase GameBoard", function(){
    var board;
 
    beforeEach(function(){
-	   loadFixtures('index.html');
+		loadFixtures('index.html');
 
-	   canvas = $('#game')[0];
-	   expect(canvas).toExist();
+		canvas = $('#game')[0];
+		expect(canvas).toExist();
 
-	   ctx = canvas.getContext('2d');
-	   expect(ctx).toBeDefined();
+		ctx = canvas.getContext('2d');
+		expect(ctx).toBeDefined();
 
-	   board = new GameBoard();
+		board = new GameBoard();
     });
    
-    it("add", function(){
+	it("add", function(){
+		var dummy = function(){}
+		//Primera prueba, 1 dummy
+		obj = new dummy;
+		board.add(obj);
+		expect(board.objects[0]).toBe(obj);
+		//Segunda prueba, 2 dummy
+		obj2 = new dummy;
+		board.add(obj2);
+		expect(board.objects.length).toBe(2);
+    });
 
+	it("remove", function(){
+		var dummy = function(){}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		board.resetRemoved();
+		board.remove(obj);
+		board.finalizeRemoved();
+		//Borramos obj, por tanto el tablero 
+		//debería tener sólo 1 obj
+		expect(board.objects.length).toBe(1);
+    });
 
-    };
+	it("iterate", function(){
+		var dummy = function(){
+			this.interna = function(){}
+		}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		spyOn(obj,"interna");
+		spyOn(obj2,"interna");
+		board.iterate("interna");
+		expect(obj.interna).toHaveBeenCalled();
+		expect(obj2.interna).toHaveBeenCalled();
+    });
+
+	it("detect", function(){
+		var dummy = function(){}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		comparador = function(dummy){
+			if (dummy === obj) {return true};
+		}
+		expect(board.detect(function() {return comparador(obj) === true})).toBe(obj);
+    });
+	
+	it("step", function(){
+		var dummy = function(){
+			this.step = function(){}	
+		}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		spyOn(obj,"step");
+		spyOn(obj2,"step");
+		board.step(7);
+		expect(obj.step).toHaveBeenCalled;
+    });
+	
 
 
 });
-
+      	
+      
 
 
 
