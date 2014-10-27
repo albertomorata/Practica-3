@@ -141,9 +141,50 @@ describe("Clase GameBoard", function(){
 		board.step(7);
 		expect(obj.step).toHaveBeenCalled;
     });
-	
 
 
+	it("draw", function(){
+		var dummy = function(){
+			this.draw = function(){}	
+		}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		spyOn(obj,"draw");
+		spyOn(obj2,"draw");
+		board.draw();
+		expect(obj.draw).toHaveBeenCalled;
+		expect(obj2.draw).toHaveBeenCalled;
+    });
+
+	it("overlap", function(){
+		var dummy = function(x,y,z,b){
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.b = b;				
+		}
+		obj = new dummy (0,0,0,0);
+		obj2 = new dummy (5,5,5,5);
+		expect(board.overlap(obj,obj2)).toBe(true);
+    });
+
+	it("collide", function(){
+		var dummy = function(x,y,z,b){
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.b = b;				
+		}
+		obj = new dummy (0,0,0,0);
+		obj2 = new dummy (5,5,5,5);
+
+		board.add(obj);
+		board.add(obj2);
+
+		expect(board.collide(obj)).toBe(obj2);
+    });
 });
       	
       
