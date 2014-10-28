@@ -56,3 +56,133 @@
     colisionado con objetos de cierto tipo, no con todos los objetos.
 
 */
+
+describe("Clase GameBoard", function(){
+
+
+   var canvas, ctx;
+   var board;
+
+   beforeEach(function(){
+		loadFixtures('index.html');
+
+		canvas = $('#game')[0];
+		expect(canvas).toExist();
+
+		ctx = canvas.getContext('2d');
+		expect(ctx).toBeDefined();
+
+		board = new GameBoard();
+    });
+   
+	it("add", function(){
+		var dummy = function(){}
+		//Primera prueba, 1 dummy
+		obj = new dummy;
+		board.add(obj);
+		expect(board.objects[0]).toBe(obj);
+		//Segunda prueba, 2 dummy
+		obj2 = new dummy;
+		board.add(obj2);
+		expect(board.objects.length).toBe(2);
+    });
+
+	it("remove", function(){
+		var dummy = function(){}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		board.resetRemoved();
+		board.remove(obj);
+		board.finalizeRemoved();
+		//Borramos obj, por tanto el tablero 
+		//debería tener sólo 1 obj
+		expect(board.objects.length).toBe(1);
+    });
+
+	it("iterate", function(){
+		var dummy = function(){
+			this.interna = function(){}
+		}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		spyOn(obj,"interna");
+		spyOn(obj2,"interna");
+		board.iterate("interna");
+		expect(obj.interna).toHaveBeenCalled();
+		expect(obj2.interna).toHaveBeenCalled();
+    });
+
+	it("detect", function(){
+		var dummy = function(){}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		comparador = function(dummy){
+			if (dummy === obj) {return true};
+		}
+		expect(board.detect(function() {return comparador(obj) === true})).toBe(obj);
+    });
+	
+	it("step", function(){
+		var dummy = function(){
+			this.step = function(){}	
+		}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		spyOn(obj,"step");
+		spyOn(obj2,"step");
+		board.step(7);
+		expect(obj.step).toHaveBeenCalled;
+    });
+
+
+	it("draw", function(){
+		var dummy = function(){
+			this.draw = function(){}	
+		}
+		obj = new dummy;
+		obj2 = new dummy;
+		board.add(obj);
+		board.add(obj2);
+		spyOn(obj,"draw");
+		spyOn(obj2,"draw");
+		board.draw();
+		expect(obj.draw).toHaveBeenCalled;
+		expect(obj2.draw).toHaveBeenCalled;
+    });
+
+	it("overlap", function(){
+		var dummy = function(x,y,z,b){
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.b = b;				
+		}
+		obj = new dummy (0,0,0,0);
+		obj2 = new dummy (5,5,5,5);
+		expect(board.overlap(obj,obj2)).toBe(true);
+    });
+
+	it("collide", function(){
+		var dummy = function(x,y,z,b){
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.b = b;				
+		}
+		obj = new dummy (0,0,0,0);
+		obj2 = new dummy (5,5,5,5);
+
+		board.add(obj);
+		board.add(obj2);
+
+		expect(board.collide(obj)).toBe(obj2);
+    });
+});

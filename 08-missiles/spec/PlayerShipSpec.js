@@ -137,5 +137,14 @@ describe("Clase PlayerShip", function(){
 
     });
 
+	it("pulso espacio",function(){
+		var misilaux = new PlayerMissile(1,150);
+		misilaux.board = {add:function(){}};
+		spyOn(misilaux.board,"add");
+		Game.keys['fire'] = true;
+		misilaux.step(0.1);
+		expect(misilaux.reload).toBe(misilaux.reloadTime);
+	});
+
 });
 
