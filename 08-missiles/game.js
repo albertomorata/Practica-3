@@ -120,11 +120,11 @@ var PlayerShip = function() {
 
 	this.reload-=dt;
 	if(!Game.keys['fire']) pulsed = true;
-	if(Game.keys['fire'] && pulsed && this.reload < 0) {
+	if(Game.keys['fire'] && this.reload < 0  && pulsed) {
 	    // Esta pulsada la tecla de disparo y ya ha pasado el tiempo reload
-		pulsed = false;	    
+		pulsed = false;	  
 		this.reload = this.reloadTime;
-
+ 
 	    // Se añaden al gameboard 2 misiles 
 	    this.board.add(new PlayerMissile(this.x,this.y+this.h/2));
 	    this.board.add(new PlayerMissile(this.x+this.w,this.y+this.h/2));

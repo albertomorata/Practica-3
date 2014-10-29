@@ -138,13 +138,18 @@ describe("Clase PlayerShip", function(){
     });
 
 	it("pulso espacio",function(){
-		var misilaux = new PlayerMissile(1,150);
-		misilaux.board = {add:function(){}};
-		spyOn(misilaux.board,"add");
-		Game.keys['fire'] = true;
-		misilaux.step(0.1);
-		expect(misilaux.reload).toBe(misilaux.reloadTime);
-	});
+		var ship = new PlayerShip();
+		var board = function () {
+			this.i = 0;
+			this.add = function () { this.i += 1 }
+		}
+		ship.board = new board();
+		var dt = 0.5;
+		Game = {width: 320, height: 480, keys: {'fire': true}};
+		ship.step(dt)
+		ship.step(dt)
+		expect(ship.board.i).toEqual(2);
+		});
 
 });
 
